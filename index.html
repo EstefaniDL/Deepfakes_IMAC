@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tesis UNAM | Detección y Análisis de Deepfakes de Video</title>
+  <title>UNAM | Análisis Integral de Deepfakes de Video</title>
   <style>
     :root {
-      --bg-dark: #070b14;
-      --bg-card: rgba(15, 23, 42, 0.78);
-      --border-glow: rgba(0, 240, 255, 0.25);
-      --cyan: #00f0ff;
-      --magenta: #ff2a6d;
-      --amber: #ffb800;
-      --emerald: #00e676;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
+      --bg-main: #f0f4f8;
+      --bg-surface: rgba(255, 255, 255, 0.92);
+      --bg-subtle: #e2e8f0;
+      --primary: #0284c7;      /* Azul cobalto tecnológico */
+      --cyan: #0891b2;         /* Cian forense */
+      --crimson: #e11d48;      /* Carmesí alerta / evidencia */
+      --amber: #d97706;        /* Ámbar advertencia */
+      --emerald: #059669;      /* Esmeralda mitigación */
+      --text-dark: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --border-light: rgba(2, 132, 199, 0.22);
+      --shadow-soft: 0 12px 32px -4px rgba(15, 23, 42, 0.08);
       --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
       --font-mono: 'Consolas', 'Courier New', monospace;
     }
@@ -26,41 +30,42 @@
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
       font-family: var(--font-sans);
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
+      min-height: 100vh;
+      overflow-x: hidden;
       background-image:
-        radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.08), transparent 35%),
-        radial-gradient(circle at 85% 80%, rgba(255, 42, 109, 0.08), transparent 35%),
-        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        radial-gradient(circle at 10% 15%, rgba(2, 132, 199, 0.08), transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(225, 29, 72, 0.06), transparent 40%),
+        linear-gradient(rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 132, 199, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
     }
 
-    /* Barra superior de navegación y progreso */
+    /* Barra superior fija */
     header {
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: 0;
       width: 100%;
-      z-index: 100;
-      background: rgba(7, 11, 20, 0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-glow);
-      padding: 0.75rem 2rem;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 0.85rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 15px rgba(15, 23, 42, 0.04);
+      flex-wrap: wrap;
+      gap: 0.8rem;
     }
 
     .brand {
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      color: var(--cyan);
-      letter-spacing: 1px;
+      font-weight: 700;
+      color: var(--primary);
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -70,224 +75,286 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: var(--magenta);
-      box-shadow: 0 0 10px var(--magenta);
-      animation: pulse 1.5s infinite;
+      background: var(--crimson);
+      box-shadow: 0 0 10px rgba(225, 29, 72, 0.6);
+      animation: pulse 1.6s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.5; }
+      50% { transform: scale(1.45); opacity: 0.5; }
     }
 
     nav.chapters {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
     .chap-btn {
-      background: transparent;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      color: var(--text-muted);
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: var(--text-body);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.25s ease;
       font-family: var(--font-mono);
     }
 
-    .chap-btn:hover, .chap-btn.active {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      background: rgba(0, 240, 255, 0.1);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+    .chap-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .chap-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
     }
 
     .progress-bar {
       position: fixed;
-      top: 54px;
+      top: 0;
       left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--cyan), var(--magenta));
-      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--crimson));
+      width: 16.6%;
       transition: width 0.4s ease;
-      z-index: 101;
+      z-index: 1001;
     }
 
-    /* Contenedor de Diapositivas */
-    main.deck {
-      height: 100vh;
-      width: 100vw;
-      position: relative;
+    /* Contenedor Principal Scrollable por Capítulo */
+    main.container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 6rem 2rem;
     }
 
-    section.slide {
-      position: absolute;
-      inset: 0;
-      padding: 5.5rem 4rem 4.5rem 4rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(40px);
-      transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-      overflow-y: auto;
+    section.chapter-view {
+      display: none;
+      animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    section.slide.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0);
+    section.chapter-view.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Encabezados de Sección */
+    .chapter-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 2px solid var(--border-light);
     }
 
     .tag {
+      display: inline-block;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--magenta);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--crimson);
+      background: rgba(225, 29, 72, 0.08);
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 0.6rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 0.7rem;
     }
 
     h1 {
-      font-size: clamp(2rem, 3.6vw, 3.2rem);
-      line-height: 1.15;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      line-height: 1.18;
+      color: var(--text-dark);
       margin-bottom: 1rem;
-      background: linear-gradient(90deg, #ffffff, var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     h2 {
-      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
-      margin-bottom: 1.2rem;
-      color: #ffffff;
-      border-left: 4px solid var(--cyan);
-      padding-left: 1rem;
+      font-size: clamp(1.65rem, 2.6vw, 2.2rem);
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
     }
 
     h3 {
-      color: var(--cyan);
       font-size: 1.15rem;
-      margin-bottom: 0.6rem;
+      color: var(--primary);
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    p {
-      color: var(--text-muted);
-      line-height: 1.6;
+    h4 {
       font-size: 1rem;
+      color: var(--text-dark);
+      margin: 0.8rem 0 0.4rem 0;
     }
 
-    /* Grids y Tarjetas */
+    p, li {
+      color: var(--text-body);
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+
+    ul.clean-list {
+      padding-left: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    ul.clean-list li {
+      margin-bottom: 0.45rem;
+    }
+
+    /* Sistemas de Rejilla */
     .grid-2 {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2rem;
-      align-items: center;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
+      gap: 1.3rem;
+      margin-bottom: 1.5rem;
     }
 
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
     }
 
+    /* Tarjetas Luminosas */
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 1.3rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      transition: transform 0.25s ease, border-color 0.25s ease;
+      background: var(--bg-surface);
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: var(--cyan);
+      border-color: var(--primary);
+      box-shadow: 0 16px 36px -6px rgba(2, 132, 199, 0.14);
     }
 
-    .card.alert {
-      border-color: rgba(255, 42, 109, 0.4);
+    .card.crimson-accent {
+      border-top: 4px solid var(--crimson);
+    }
+    .card.crimson-accent h3 { color: var(--crimson); }
+
+    .card.cyan-accent {
+      border-top: 4px solid var(--primary);
     }
 
-    .card.alert h3 {
-      color: var(--magenta);
+    .card.emerald-accent {
+      border-top: 4px solid var(--emerald);
     }
+    .card.emerald-accent h3 { color: var(--emerald); }
 
-    /* Malla Biométrica Animada (Portada) */
+    .card.amber-accent {
+      border-top: 4px solid var(--amber);
+    }
+    .card.amber-accent h3 { color: var(--amber); }
+
+    /* Malla Biométrica Animada (Portada Light) */
     .biometric-box {
       position: relative;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 360px;
-      border: 1px solid var(--border-glow);
-      border-radius: 16px;
-      background: rgba(10, 16, 30, 0.8);
+      min-height: 380px;
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+      box-shadow: var(--shadow-soft);
       overflow: hidden;
+      padding: 1.5rem;
     }
 
     .scan-line {
       position: absolute;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      box-shadow: 0 0 15px var(--cyan);
+      background: linear-gradient(90deg, transparent, var(--primary), var(--crimson), transparent);
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.6);
       animation: scan 3.5s ease-in-out infinite;
     }
 
     @keyframes scan {
-      0% { top: 8%; }
-      50% { top: 90%; }
-      100% { top: 8%; }
+      0% { top: 6%; }
+      50% { top: 92%; }
+      100% { top: 6%; }
     }
 
     .face-mesh svg {
       width: 240px;
       height: 270px;
-      stroke: var(--cyan);
+      stroke: var(--primary);
       fill: none;
-      stroke-width: 1.5;
-      filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.5));
+      stroke-width: 1.8;
+      filter: drop-shadow(0 4px 8px rgba(2, 132, 199, 0.25));
     }
 
-    /* Pipeline horizontal */
+    /* Pipeline Flujo */
     .pipeline {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: space-between;
-      gap: 0.75rem;
-      margin: 1.2rem 0;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
     }
 
     .pipe-step {
       flex: 1;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--cyan);
+      background: #ffffff;
+      border: 1px solid #bae6fd;
+      border-left: 4px solid var(--primary);
       border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
+      padding: 1.1rem;
+      box-shadow: var(--shadow-soft);
     }
 
     .pipe-arrow {
-      color: var(--magenta);
+      display: flex;
+      align-items: center;
+      color: var(--crimson);
       font-family: var(--font-mono);
       font-weight: bold;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
     }
 
-    /* Barras interactivas de degradación (Cap 2) */
+    /* Fórmulas Matemáticas */
+    .formula-box {
+      font-family: var(--font-mono);
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid var(--primary);
+      padding: 0.75rem 1rem;
+      margin-top: 0.85rem;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      color: #0f172a;
+      overflow-x: auto;
+    }
+
+    /* Barras de Métricas Interactivas */
     .metric-row {
-      margin-bottom: 0.9rem;
+      margin-bottom: 1rem;
     }
 
     .metric-label {
@@ -295,12 +362,14 @@
       justify-content: space-between;
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      margin-bottom: 0.3rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--text-dark);
     }
 
     .bar-track {
-      background: rgba(255, 255, 255, 0.08);
-      height: 12px;
+      background: #e2e8f0;
+      height: 14px;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -311,402 +380,651 @@
       transition: width 1s ease;
     }
 
-    /* Tabla comparativa (Cap 4 y 5) */
+    /* Cifras Destacadas (KPIs Caso IPN y Pemex) */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.9rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--crimson);
+      display: block;
+    }
+
+    .stat-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Tablas Comparativas */
     table.comp-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.92rem;
-      background: var(--bg-card);
-      border-radius: 10px;
+      background: #ffffff;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      margin: 1.2rem 0;
     }
 
     table.comp-table th, table.comp-table td {
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      padding: 0.9rem 1.1rem;
+      border-bottom: 1px solid #e2e8f0;
       text-align: left;
+      vertical-align: top;
     }
 
     table.comp-table th {
-      background: rgba(0, 240, 255, 0.12);
-      color: var(--cyan);
+      background: #0f172a;
+      color: #ffffff;
       font-family: var(--font-mono);
+      font-size: 0.85rem;
     }
 
-    /* Contenedor de Video Evidencia */
-    .video-frame {
-      border: 1px dashed var(--magenta);
+    table.comp-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* Contenedores de Evidencia Audiovisual */
+    .evidence-box {
+      border: 2px dashed #94a3b8;
       border-radius: 12px;
       padding: 1rem;
-      background: rgba(255, 42, 109, 0.05);
+      background: #f8fafc;
+      margin-top: 1rem;
       text-align: center;
     }
 
-    .video-frame video {
+    .evidence-box video, .evidence-box img {
       width: 100%;
-      max-height: 230px;
+      max-height: 250px;
+      object-fit: cover;
       border-radius: 8px;
-      background: #000;
+      background: #0f172a;
     }
 
-    .formula-box {
+    .evidence-caption {
       font-family: var(--font-mono);
-      background: rgba(0, 0, 0, 0.45);
-      border-left: 3px solid var(--amber);
-      padding: 0.6rem 0.9rem;
-      margin-top: 0.6rem;
-      font-size: 0.85rem;
-      color: var(--amber);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
     }
 
-    /* Controles inferiores */
+    /* Footer de Navegación Inferior */
     footer.controls {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      padding: 0.8rem 2rem;
+      padding: 0.8rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(7, 11, 20, 0.9);
-      border-top: 1px solid var(--border-glow);
-      z-index: 100;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid #cbd5e1;
+      z-index: 1000;
     }
 
     .nav-arrows button {
-      background: rgba(0, 240, 255, 0.12);
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      padding: 0.45rem 1.1rem;
-      border-radius: 6px;
+      background: #ffffff;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
       cursor: pointer;
       font-family: var(--font-mono);
+      font-weight: 700;
       margin-left: 0.5rem;
       transition: 0.2s;
     }
 
     .nav-arrows button:hover {
-      background: var(--cyan);
-      color: var(--bg-dark);
-      font-weight: bold;
+      background: var(--primary);
+      color: #ffffff;
     }
 
-    .slide-counter {
+    .section-indicator {
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      color: var(--text-muted);
+      font-weight: 700;
+      color: var(--text-body);
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      section.slide { padding: 5rem 1.5rem 4.5rem 1.5rem; }
       .pipeline { flex-direction: column; }
-      .pipe-arrow { transform: rotate(90deg); }
+      .pipe-arrow { transform: rotate(90deg); justify-content: center; }
+      header { padding: 0.75rem 1rem; }
+      main.container { padding: 1.5rem 1rem 5.5rem 1rem; }
     }
   </style>
 </head>
 <body>
 
+  <div class="progress-bar" id="progressBar"></div>
+
   <header>
     <div class="brand">
       <span class="pulse-dot"></span>
-      <span>UNAM · FES ACATLÁN · LIC. MATEMÁTICAS APLICADAS Y COMPUTACIÓN</span>
+      <span>UNAM · FES ACATLÁN</span>
     </div>
     <nav class="chapters" id="chapterNav">
-      <button class="chap-btn active" onclick="goToSlide(0)">Inicio</button>
-      <button class="chap-btn" onclick="goToSlide(1)">Cap. 1</button>
-      <button class="chap-btn" onclick="goToSlide(2)">Cap. 2</button>
-      <button class="chap-btn" onclick="goToSlide(4)">Cap. 3</button>
-      <button class="chap-btn" onclick="goToSlide(5)">Cap. 4</button>
-      <button class="chap-btn" onclick="goToSlide(7)">Cap. 5</button>
+      <button class="chap-btn active" onclick="showChapter(0)">Portada</button>
+      <button class="chap-btn" onclick="showChapter(1)">Cap. 1 · Fundamentos</button>
+      <button class="chap-btn" onclick="showChapter(2)">Cap. 2 · Arquitecturas</button>
+      <button class="chap-btn" onclick="showChapter(3)">Cap. 3 · Marco Jurídico</button>
+      <button class="chap-btn" onclick="showChapter(4)">Cap. 4 · Casos IPN/Pemex</button>
+      <button class="chap-btn" onclick="showChapter(5)">Cap. 5 · Resultados</button>
     </nav>
   </header>
-  <div class="progress-bar" id="progressBar"></div>
 
-  <main class="deck">
+  <main class="container">
 
-    <!-- DIAPOSITIVA 0: PORTADA -->
-    <section class="slide active" data-chapter="0">
-      <div class="grid-2">
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN 0: PORTADA E INTRODUCCIÓN                                     -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view active" id="chap-0">
+      <div class="grid-2" style="align-items: center; margin-top: 1rem;">
         <div>
-          <div class="tag">Examen Profesional · Tesis de Licenciatura</div>
+          <div class="tag">Universidad Nacional Autónoma de México</div>
           <h1>Uso malicioso de la inteligencia artificial para la suplantación de la identidad, manipulación de imágenes y explotación de datos personales</h1>
-          <p style="margin-bottom: 1.5rem;">
-            Análisis computacional, forense y sociojurídico de los <em>deepfakes</em> de video y su impacto en el contexto mexicano.
+          <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">
+            Investigación integral sobre los fundamentos computacionales de generación y detección de <em>deepfakes</em> de video, así como sus implicaciones sociotécnicas, biométricas y jurídicas en México.
           </p>
-          <div class="card" style="border-left: 4px solid var(--cyan);">
-            <p style="color: #fff; font-weight: 600;">Autores:</p>
-            <p>• Estefani Michalle Domínguez Lira</p>
-            <p>• Leonardo Escobar Sánchez</p>
-            <p style="margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan);">
-              Universidad Nacional Autónoma de México · Noviembre 2026
+
+          <div class="card cyan-accent" style="margin-bottom: 1.2rem;">
+            <h3>Sustentantes</h3>
+            <p style="font-weight: 700; color: var(--text-dark);">• Estefani Michalle Domínguez Lira</p>
+            <p style="font-weight: 700; color: var(--text-dark);">• Leonardo Escobar Sánchez</p>
+            <p style="margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--primary);">
+              Licenciatura en Matemáticas Aplicadas y Computación · Noviembre 2026
             </p>
           </div>
         </div>
+
         <div class="biometric-box">
           <div class="scan-line"></div>
           <div class="face-mesh">
             <svg viewBox="0 0 200 240">
-              <!-- Contorno facial geométrico -->
               <polygon points="100,20 155,50 170,115 145,185 100,215 55,185 30,115 45,50" />
-              <!-- Triangulación biométrica -->
               <polyline points="45,50 100,85 155,50" />
               <polyline points="30,115 72,95 100,85 128,95 170,115" />
               <polyline points="72,95 100,135 128,95" />
               <polyline points="55,185 100,165 145,185" />
               <line x1="100" y1="20" x2="100" y2="215" stroke-dasharray="4 4" />
-              <!-- Puntos clave (Landmarks) -->
-              <circle cx="72" cy="95" r="3.5" fill="#ff2a6d" />
-              <circle cx="128" cy="95" r="3.5" fill="#ff2a6d" />
-              <circle cx="100" cy="135" r="3.5" fill="#ffb800" />
-              <circle cx="78" cy="165" r="3" fill="#00f0ff" />
-              <circle cx="122" cy="165" r="3" fill="#00f0ff" />
+              <circle cx="72" cy="95" r="4" fill="#e11d48" />
+              <circle cx="128" cy="95" r="4" fill="#e11d48" />
+              <circle cx="100" cy="135" r="4" fill="#d97706" />
+              <circle cx="78" cy="165" r="3.5" fill="#0284c7" />
+              <circle cx="122" cy="165" r="3.5" fill="#0284c7" />
             </svg>
           </div>
+          <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--primary); margin-top: 0.8rem;">
+            [ ANÁLISIS BIOMÉTRICO Y FORENSE DE VIDEO ]
+          </p>
         </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.5rem;">
+        <h3>Propósito y Estructura de la Investigación</h3>
+        <p>
+          La democratización del aprendizaje profundo ha permitido sintetizar rostros y voces con un nivel de realismo que desafía la capacidad perceptiva humana y los sistemas tradicionales de verificación. Esta tesis articula cinco capítulos que transitan desde la teoría matemática de los modelos generativos y los límites de los clasificadores forenses (Capítulos 1 y 2), hasta el análisis del marco legal mexicano, el estudio comparativo de los casos <strong>IPN</strong> y <strong>Pemex</strong>, y una propuesta multidimensional de mitigación (Capítulos 3, 4 y 5).
+        </p>
       </div>
     </section>
 
-    <!-- DIAPOSITIVA 1: CAPÍTULO 1 -->
-    <section class="slide" data-chapter="1">
-      <div class="tag">Capítulo 1 · Fundamentos Teóricos y Contexto</div>
-      <h2>Evolución de la Manipulación Digital y Arquitecturas Generativas</h2>
+    <!-- ===================================================================== -->
+    <!-- CAPÍTULO 1: FUNDAMENTOS TEÓRICOS Y CONTEXTO                           -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view" id="chap-1">
+      <div class="chapter-header">
+        <div class="tag">Capítulo 1</div>
+        <h2>Fundamentos teóricos y contexto de la generación sintética de medios</h2>
+        <p>Evolución desde la edición manual hasta la síntesis autónoma mediante aprendizaje profundo y su taxonomía de riesgos.</p>
+      </div>
+
+      <h3>1.1. Evolución Histórica de la Manipulación Digital</h3>
       <div class="pipeline">
         <div class="pipe-step">
-          <h3>1. Shallowfakes / Cheapfakes</h3>
-          <p>Edición lineal, recortes, cambio de velocidad o descontextualización sin IA.</p>
+          <h4>1. Edición Clásica y Digital Temprana</h4>
+          <p>Fotomontajes analógicos y edición por capas en software (Photoshop). Detectable por incoherencias en sombras, color y perspectiva.</p>
         </div>
         <div class="pipe-arrow">➔</div>
         <div class="pipe-step">
-          <h3>2. Autoencoders & GANs</h3>
-          <p>Espacio latente compartido (DeepFaceLab, StyleGAN); síntesis fotorrealista.</p>
+          <h4>2. Shallowfakes y Cheapfakes</h4>
+          <p>Manipulación sin IA (recortes, cambio de velocidad o contexto). Explota sesgos cognitivos y "burbujas de filtro" en la Web 2.0.</p>
         </div>
         <div class="pipe-arrow">➔</div>
         <div class="pipe-step">
-          <h3>3. Modelos de Difusión</h3>
-          <p>Eliminación iterativa de ruido gaussiano; ausentes de artefactos de rejilla.</p>
-        </div>
-        <div class="pipe-arrow">➔</div>
-        <div class="pipe-step">
-          <h3>4. Vision Transformers</h3>
-          <p>Atención global por parches espaciales y coherencia multimodal.</p>
+          <h4>3. Deepfakes Generativos</h4>
+          <p>Creación sintética autónoma de identidad, expresiones y voz que sustituye fidedignamente la realidad registrada.</p>
         </div>
       </div>
-      <div class="grid-4" style="margin-top: 1rem;">
-        <div class="card alert">
+
+      <h3 style="margin-top: 1.8rem;">1.2. Marco Conceptual: Suplantación Sintética y Biometría</h3>
+      <div class="grid-3">
+        <div class="card cyan-accent">
+          <h3>Componentes del Deepfake</h3>
+          <ul class="clean-list">
+            <li><strong>Face Swapping:</strong> Mapeo de geometría y textura de un rostro fuente (F<sub>s</sub>) sobre un destino (D<sub>t</sub>).</li>
+            <li><strong>Lip-Syncing:</strong> Sincronización cinemática de labios con fonemas de una pista de audio.</li>
+            <li><strong>Body & Pose Tracking:</strong> Coherencia estructural del movimiento corporal.</li>
+          </ul>
+        </div>
+        <div class="card cyan-accent">
+          <h3>Identidad Sintética</h3>
+          <p>Construcción de perfiles híbridos combinando fragmentos de datos reales con rasgos generados por IA. Evade sistemas de prevención de fraude en ecosistemas FinTech al carecer de historial previo.</p>
+        </div>
+        <div class="card cyan-accent">
+          <h3>Biometría Visual y de Voz</h3>
+          <p>Vulnerabilidad frente a ataques de repetición (<em>Replay Attacks</em>), suplantación facial (<em>Spoofing</em>) y clonación acústica (<em>Voice Cloning</em>). Exige detección de vida activa (<em>Liveness Detection</em>) y verificación multimodal.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 1.8rem;">1.3. Modelos de Aprendizaje Profundo para Generación Audiovisual</h3>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Redes Generativas Antagónicas (GAN) y Autoencoders</h3>
+          <p>Las GAN (Goodfellow et al.) enfrentan un <strong>Generador</strong> y un <strong>Discriminador</strong> en un juego de suma cero hasta lograr imágenes indistinguibles (ej. <em>StyleGAN2</em>). Por su parte, herramientas como <em>DeepFaceLab</em> emplean autoencoders con codificador compartido para intercambiar identidades, aunque suelen dejar artefactos de cuadrícula en el dominio de la frecuencia.</p>
+        </div>
+        <div class="card">
+          <h3>Modelos de Difusión y Vision Transformers (ViT)</h3>
+          <p>Los <strong>Modelos de Difusión</strong> añaden ruido gaussiano progresivamente y aprenden a revertirlo paso a paso, logrando mayor estabilidad y eliminando las huellas de rejilla de las GAN. Los <strong>ViT</strong> dividen la imagen en parches mediante atención global para capturar dependencias espaciales de largo alcance en generación y detección.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 1.8rem;">1.4 y 1.5. Taxonomía de Usos Maliciosos y Contexto en México</h3>
+      <div class="grid-4">
+        <div class="card crimson-accent">
           <h3>Fraude Financiero</h3>
-          <p>Suplantación de ejecutivos y entidades públicas para estafas masivas.</p>
+          <p>Suplantación de autoridades y ejecutivos (BEC audiovisual) para autorizar transferencias o promover estafas de inversión.</p>
         </div>
-        <div class="card alert">
-          <h3>Desinformación</h3>
-          <p>Microtargeting narrativo y erosión de la confianza democrática.</p>
+        <div class="card crimson-accent">
+          <h3>Desinformación Política</h3>
+          <p>Microtargeting narrativo, envenenamiento de fuentes y fatiga de verificación en climas de alta polarización electoral en México.</p>
         </div>
-        <div class="card alert">
-          <h3>Violencia Digital (NCII)</h3>
-          <p>Contenido íntimo sintético sin consentimiento con impacto de género.</p>
+        <div class="card crimson-accent">
+          <h3>Contenido Íntimo (NCII)</h3>
+          <p>Violencia digital de género mediante pornografía sintética no consentida que vulnera la autonomía corporal.</p>
         </div>
-        <div class="card alert">
-          <h3>Extorsión y Chantaje</h3>
-          <p>Fabricación de evidencia falsa como mecanismo de coacción.</p>
+        <div class="card crimson-accent">
+          <h3>Extorsión y Coerción</h3>
+          <p>Fabricación de evidencia audiovisual comprometedora para exigir pagos o silencio bajo amenaza de difusión viral.</p>
         </div>
       </div>
     </section>
 
-    <!-- DIAPOSITIVA 2: CAPÍTULO 2 (PIPELINE Y DETECCIÓN) -->
-    <section class="slide" data-chapter="2">
-      <div class="tag">Capítulo 2 · Arquitecturas Computacionales</div>
-      <h2>Pipeline de Generación vs. Técnicas de Detección Forense</h2>
+    <!-- ===================================================================== -->
+    <!-- CAPÍTULO 2: ARQUITECTURAS COMPUTACIONALES DE GENERACIÓN Y DETECCIÓN   -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view" id="chap-2">
+      <div class="chapter-header">
+        <div class="tag">Capítulo 2</div>
+        <h2>Arquitecturas computacionales: generación y detección de deepfakes</h2>
+        <p>Desglose matemático del pipeline de síntesis, métodos forenses de detección y análisis de degradación en entornos reales.</p>
+      </div>
+
+      <h3>2.1. Proceso Técnico de Generación en Cuatro Fases</h3>
       <div class="grid-2">
-        <div class="card">
-          <h3>Flujo Modular de Síntesis Facial</h3>
-          <p style="margin-bottom: 0.8rem;">1. <strong>Detección y Landmarks:</strong> S3FD / RetinaFace + 68 puntos clave.</p>
-          <p style="margin-bottom: 0.8rem;">2. <strong>Normalización Afín (Umeyama):</strong> Matriz reversible M para alinear escala y rotación.</p>
-          <p style="margin-bottom: 0.8rem;">3. <strong>Síntesis:</strong> Face-Swapping (Encoder-Decoder), Reenactment (Jacobianas) y Lip-Sync (Wav2Lip + SyncNet).</p>
-          <p>4. <strong>Blending:</strong> Transferencia de color y fusión de gradientes de Poisson.</p>
+        <div class="card cyan-accent">
+          <h3>1. Preprocesamiento y Alineación de Umeyama</h3>
+          <p>Localización del rostro con <strong>S3FD / RetinaFace</strong> y extracción de 68 puntos de referencia (<em>landmarks</em> con 2DFAN o Dlib). Se aplica la matriz afín reversible de Umeyama (M) para normalizar escala, rotación y traslación a resoluciones estándar (256×256 o 512×512), permitiendo reinsertar el rostro mediante M⁻¹.</p>
+          <div class="formula-box">
+            M = arg min ∑ || yᵢ - (c R xᵢ + t) ||²   |   Reinserción: M⁻¹
+          </div>
+        </div>
+        <div class="card cyan-accent">
+          <h3>2. Intercambio, Reenactment y Lip-Sync</h3>
+          <ul class="clean-list">
+            <li><strong>Face-Swapping (DF / LIAE):</strong> Codificador compartido (<em>Shared Encoder</em>) que abstrae pose/expresión y decodificadores independientes por identidad.</li>
+            <li><strong>Reenactment (FOMM):</strong> Desacopla apariencia y movimiento mediante expansión de Taylor de primer orden y matrices Jacobianas locales (J<sub>k</sub>).</li>
+            <li><strong>Lip-Sync (Wav2Lip):</strong> Fusión de espectrogramas de voz con rostro enmascarado, supervisado por un discriminador experto (<em>SyncNet</em>).</li>
+          </ul>
           <div class="formula-box">
             P_sync = (v · s) / max(||v||₂ · ||s||₂, ε)
           </div>
         </div>
-        <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div class="card">
-            <h3>Señales Fisiológicas</h3>
-            <p>Tasa de parpadeo (EAR/LRCN), geometría elíptica de pupilas (BIoU) y pose 3D.</p>
-          </div>
-          <div class="card">
-            <h3>Dominio Frecuencial</h3>
-            <p>Análisis espectral mediante FFT y DCT (F3-Net) para detectar huellas ocultas.</p>
-          </div>
-          <div class="card">
-            <h3>Clasificadores CNN/ViT</h3>
-            <p>MesoNet (nivel mesoscópico) y XceptionNet con mapas de saliencia Grad-CAM.</p>
-          </div>
-          <div class="card">
-            <h3>Coherencia Temporal</h3>
-            <p>Redes híbridas CNN+BiGRU y LipForensics sobre secuencias de fotogramas.</p>
-          </div>
+      </div>
+
+      <h3 style="margin-top: 1.5rem;">2.2. Técnicas de Detección Computacional</h3>
+      <div class="grid-4">
+        <div class="card">
+          <h3>2.2.1. Señales Fisiológicas</h3>
+          <ul class="clean-list">
+            <li><strong>Parpadeo ocular:</strong> Métrica EAR y redes LRCN (AUROC: 0.99).</li>
+            <li><strong>Pupilas e iris:</strong> Irregularidades no elípticas medidas con BIoU (AUC: 0.91).</li>
+            <li><strong>Pose 3D:</strong> Discrepancia entre región central y contorno facial (AUC: 0.974).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2.2.2. Artefactos Forenses</h3>
+          <ul class="clean-list">
+            <li><strong>Face Warping:</strong> Firmas de re-muestreo y escalado en bordes (ResNet-50: 98.7% AUC).</li>
+            <li><strong>Dominio Frecuencial:</strong> Transformada Discreta del Coseno (DCT) en <strong>F3-Net</strong> para detectar anomalías espectrales en videos comprimidos.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2.2.3. Deep Learning</h3>
+          <ul class="clean-list">
+            <li><strong>MesoNet:</strong> Nivel mesoscópico ligero (~28k parámetros; 98.4% precisión video).</li>
+            <li><strong>XceptionNet:</strong> Convoluciones separables en profundidad sobre recortes faciales 1.3x (99.26% en Raw).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2.2.4. Coherencia Temporal</h3>
+          <ul class="clean-list">
+            <li><strong>CNN + BiGRU:</strong> Modela parpadeos anómalos (<em>flickering</em>) entre fotogramas consecutivos.</li>
+            <li><strong>LipForensics:</strong> Detecta incoherencias biomecánicas en el habla y pronunciación de fonemas bilabiales (98.1% AUC en LQ).</li>
+          </ul>
         </div>
       </div>
-    </section>
 
-    <!-- DIAPOSITIVA 3: CAPÍTULO 2 (DEGRADACIÓN Y EVALUACIÓN) -->
-    <section class="slide" data-chapter="2">
-      <div class="tag">Capítulo 2 · Factores Críticos y Generalización</div>
-      <h2>Impacto de la Compresión y Brecha <em>In-the-Wild</em></h2>
+      <h3 style="margin-top: 1.5rem;">2.3, 2.4 y 2.5. Factores de Degradación, Ataques Adversarios y Límites de Evaluación</h3>
       <div class="grid-2">
         <div class="card">
-          <h3>Caída de Rendimiento (XceptionNet · FaceForensics++ / Cross-Dataset)</h3>
-          <div class="metric-row" style="margin-top: 1rem;">
-            <div class="metric-label"><span>Video Sin Compresión (Raw C0)</span><span>99.26%</span></div>
+          <h3>Impacto Cuantitativo de la Compresión y Generalización (XceptionNet)</h3>
+          <p style="margin-bottom: 1rem;">Los códecs de redes sociales (H.264/HEVC) destruyen las frecuencias altas y el ruido de sensor, provocando una caída severa al evaluar fuera del dominio de entrenamiento:</p>
+          
+          <div class="metric-row">
+            <div class="metric-label"><span>FaceForensics++ Raw (Sin compresión C0)</span><span>99.26%</span></div>
             <div class="bar-track"><div class="bar-fill" style="width: 99.26%; background: var(--emerald);"></div></div>
           </div>
           <div class="metric-row">
-            <div class="metric-label"><span>Compresión Ligera (HQ C23)</span><span>95.73%</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width: 95.73%; background: var(--cyan);"></div></div>
+            <div class="metric-label"><span>FaceForensics++ HQ (Compresión ligera C23)</span><span>95.73%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 95.73%; background: var(--primary);"></div></div>
           </div>
           <div class="metric-row">
-            <div class="metric-label"><span>Compresión Severa Redes Sociales (LQ C40)</span><span>81.00%</span></div>
+            <div class="metric-label"><span>FaceForensics++ LQ (Compresión severa C40)</span><span>81.00%</span></div>
             <div class="bar-track"><div class="bar-fill" style="width: 81%; background: var(--amber);"></div></div>
           </div>
           <div class="metric-row">
             <div class="metric-label"><span>Evaluación Cross-Dataset (Celeb-DF)</span><span>59.40%</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width: 59.4%; background: var(--magenta);"></div></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 59.4%; background: var(--crimson);"></div></div>
+          </div>
+          <div class="metric-row">
+            <div class="metric-label"><span>Bajo Ruido Gaussiano / Ataques Adversarios PGD</span><span>~0.00% - 51%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width: 15%; background: #64748b;"></div></div>
           </div>
         </div>
-        <div class="card">
-          <h3>Limitaciones Operativas en el Mundo Real</h3>
-          <p style="margin-bottom: 0.8rem;">• <strong>Destrucción de altas frecuencias:</strong> Códecs H.264/HEVC eliminan artefactos de borde al subir videos a plataformas.</p>
-          <p style="margin-bottom: 0.8rem;">• <strong>Ataques Adversarios:</strong> Perturbaciones imperceptibles (PGD, EoT) reducen la precisión de detección casi a 0%.</p>
-          <p>• <strong>Horizonte de solución:</strong> Transición de detectores pasivos hacia estándares de procedencia criptográfica (<strong>C2PA</strong>) e IA Explicable (<strong>XAI</strong>).</p>
+
+        <div class="card crimson-accent">
+          <h3>Brecha <em>In-the-Wild</em> y Horizontes de Solución</h3>
+          <ul class="clean-list">
+            <li><strong>Sesgo de Textura y Ataques Adversarios:</strong> Los clasificadores memorizan patrones de cada generador y colapsan ante ruido universal o ataques PGD/EoT (98.23% tasa de engaño).</li>
+            <li><strong>Métricas Forenses:</strong> La exactitud (<em>Accuracy</em>) es engañosa en clases desbalanceadas; se prioriza <strong>ROC-AUC</strong>, <strong>EER</strong> y <strong>TPR @ FPR ≤ 10⁻³</strong> para evitar falsos positivos masivos.</li>
+            <li><strong>Nuevos Paradigmas:</strong> IA Explicable (<strong>Grad-CAM</strong> y <em>Face X-ray</em>), análisis de espectro de fase y autenticación activa en captura mediante firmas criptográficas (<strong>C2PA</strong>).</li>
+          </ul>
           <div class="formula-box">
-            EER: FPR(τ*) = FNR(τ*) | TPR @ FPR ≤ 10⁻³
+            ACC = (TP+TN)/(TP+TN+FP+FN)  |  EER: FPR(τ*) = FNR(τ*)
           </div>
         </div>
       </div>
     </section>
 
-    <!-- DIAPOSITIVA 4: CAPÍTULO 3 -->
-    <section class="slide" data-chapter="3">
-      <div class="tag">Capítulo 3 · Dimensiones Sociotécnicas y Jurídicas en México</div>
-      <h2>Impacto Psicológico, Datos Biométricos y Marco Normativo</h2>
+    <!-- ===================================================================== -->
+    <!-- CAPÍTULO 3: DIMENSIONES SOCIOTÉCNICAS, JURÍDICAS Y ÉTICAS EN MÉXICO   -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view" id="chap-3">
+      <div class="chapter-header">
+        <div class="tag">Capítulo 3</div>
+        <h2>Dimensiones sociotécnicas, jurídicas y éticas de los deepfakes en México</h2>
+        <p>Erosión de la verdad pública, protección constitucional de datos biométricos, Ley Olimpia y retos de gobernanza.</p>
+      </div>
+
       <div class="grid-3">
-        <div class="card alert">
-          <h3>Dividendo del Mentiroso</h3>
-          <p>Erosión del principio «ver para creer»: actores deshonestos niegan grabaciones reales alegando que son falsificaciones con IA (Chesney & Citron).</p>
+        <div class="card crimson-accent">
+          <h3>3.1. Dividendo del Mentiroso</h3>
+          <p>Conceptualizado por Chesney y Citron: la conciencia pública sobre los <em>deepfakes</em> destruye el principio «ver para creer», permitiendo que actores deshonestos nieguen grabaciones reales e incriminatorias alegando que son falsificaciones con IA, invirtiendo la carga de la prueba.</p>
         </div>
-        <div class="card">
-          <h3>Datos Biométricos (INAI)</h3>
-          <p>El patrón facial es un dato personal sensible, único e irremplazable. Su extracción en redes (<em>scraping</em>) sin consentimiento expreso viola la LFPDPPP.</p>
+        <div class="card cyan-accent">
+          <h3>3.2. Datos Biométricos (INAI)</h3>
+          <p>El patrón facial vectorizado es un <strong>dato personal sensible</strong>, único e irremplazable (LGPDPPSO / LFPDPPP). Que una imagen esté en redes sociales no otorga licencia implícita para el <em>data scraping</em> ni entrenamiento de IA sin consentimiento expreso y por escrito.</p>
         </div>
-        <div class="card">
-          <h3>Ley Olimpia y SCJN</h3>
-          <p>Arts. 199 Octies y Nonies CPF sancionan con 3 a 6 años de prisión la creación y difusión de contenido íntimo simulado o modificado digitalmente.</p>
+        <div class="card crimson-accent">
+          <h3>3.3. Ley Olimpia y SCJN</h3>
+          <p>Arts. 199 Octies y Nonies del Código Penal Federal sancionan con <strong>3 a 6 años de prisión</strong> elaborar, alterar, simular o difundir contenido íntimo sexual sin consentimiento. La SCJN (Tesis P./J. 214/2026) protege la propia imagen frente a usos no informativos.</p>
         </div>
       </div>
-      <div class="card" style="margin-top: 1.2rem; border-left: 4px solid var(--amber);">
-        <h3>Retos Procesales y Gobernanza</h3>
-        <p>La rapidez viral supera la lentitud judicial. Se requiere fortalecer la cadena de custodia digital (Art. 227 CNPP), el peritaje forense certificado y adoptar marcos internacionales como el <strong>AI Act europeo</strong> (obligaciones de transparencia) y credenciales verificables.</p>
+
+      <div class="grid-2" style="margin-top: 1.2rem;">
+        <div class="card">
+          <h3>3.4 y 3.5. Marco Jurídico y Retos de Acreditación</h3>
+          <ul class="clean-list">
+            <li><strong>Triada de Responsabilidades:</strong> Administrativa (multas INAI y derechos ARCO), Civil (daño moral extracontractual y cuantificación de viralidad) y Penal (suplantación, fraude y violencia digital).</li>
+            <li><strong>Crisis de Atribución:</strong> Fragmentación entre usuario, plataforma y servidores extranjeros.</li>
+            <li><strong>Velocidad vs. Lentitud Judicial:</strong> El daño reputacional ocurre en las primeras 72 horas; exige medidas cautelares inmediatas de retiro (Art. 20 Sexies LGAMVLV) y peritajes forenses homologados.</li>
+          </ul>
+        </div>
+        <div class="card emerald-accent">
+          <h3>3.6 y 3.7. Referentes Globales y Ciberseguridad</h3>
+          <ul class="clean-list">
+            <li><strong>Estándares Internacionales:</strong> El <em>GDPR</em> europeo (responsabilidad proactiva y derecho al olvido), el <em>AI Act</em> de la UE (regulación basada en riesgo y etiquetado obligatorio) y la recomendación ética de la <em>UNESCO</em>.</li>
+            <li><strong>Gobernanza y Procedencia:</strong> Implementación de arquitectura <em>Zero Trust</em>, cifrado homomórfico, Credenciales Verificables (VCs) y registro de resúmenes <strong>Hash</strong> en cadenas de custodia inmutables.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    <!-- DIAPOSITIVA 5: CAPÍTULO 4 (ESTUDIO DE CASOS) -->
-    <section class="slide" data-chapter="4">
-      <div class="tag">Capítulo 4 · Metodología y Estudio Comparativo de Casos</div>
-      <h2>Reconstrucción Empírica: Caso IPN vs. Caso Pemex</h2>
+    <!-- ===================================================================== -->
+    <!-- CAPÍTULO 4: METODOLOGÍA Y ESTUDIO COMPARATIVO DE CASOS (IPN Y PEMEX)  -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view" id="chap-4">
+      <div class="chapter-header">
+        <div class="tag">Capítulo 4</div>
+        <h2>Metodología y estudio comparativo de casos en México</h2>
+        <p>Diseño cualitativo instrumental mediante triangulación documental y reconstrucción empírica de dos casos emblemáticos.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h3>4.1 y 4.2. Enfoque Metodológico y Criterios de Selección</h3>
+        <p>Investigación cualitativa de alcance descriptivo, explicativo y analítico bajo un diseño no experimental de <strong>casos múltiples instrumentales</strong>. Las unidades de análisis fueron seleccionadas por muestreo intencional considerando: (1) diferenciación del vector tecnológico (imagen estática/híbrida vs. video continuo con <em>lip-sync</em>), (2) bienes jurídicos tutelados (intimidad sexual vs. patrimonio y confianza institucional) y (3) trascendencia pública en México (2023–2026).</p>
+      </div>
+
+      <!-- RECONSTRUCCIÓN PARALELA DE AMBOS CASOS -->
       <div class="grid-2">
-        <div>
-          <table class="comp-table">
-            <thead>
-              <tr>
-                <th>Dimensión</th>
-                <th>Caso IPN (2023–2025)</th>
-                <th>Caso Pemex (2023–2026)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Material</strong></td>
-                <td>~166,000 fotos alteradas y archivos privados.</td>
-                <td>Videos continuos (<em>Lip-Sync</em> y voz clonada).</td>
-              </tr>
-              <tr>
-                <td><strong>Objetivo</strong></td>
-                <td>Violencia sexual digital y comercialización en Telegram.</td>
-                <td>Fraude financiero suplantando periodistas y funcionarios.</td>
-              </tr>
-              <tr>
-                <td><strong>Difusión</strong></td>
-                <td>Canales privados cerrados.</td>
-                <td>Pauta publicitaria pagada en YouTube, Meta y TikTok.</td>
-              </tr>
-              <tr>
-                <td><strong>Reto Legal</strong></td>
-                <td>Acreditación probatoria individual en juicio oral.</td>
-                <td>Atribución transfronteriza y moderación en tiempo real.</td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- CASO 1: IPN -->
+        <div class="card crimson-accent">
+          <h3>4.3. Caso 1: Manipulación de Imágenes con IA en el IPN (ESCA Santo Tomás)</h3>
+          <p>En octubre de 2023, alumnas denunciaron a un estudiante identificado como <strong>Diego «N»</strong> por extraer fotografías de redes sociales para generar y comercializar contenido sexual sintético sin consentimiento en grupos privados de Telegram.</p>
+          
+          <div class="stat-grid">
+            <div class="stat-box">
+              <span class="stat-num">166,000</span>
+              <span class="stat-desc">Fotografías alteradas reportadas</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">20,000</span>
+              <span class="stat-desc">Videos y compilaciones en dispositivo</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">≥ 40%</span>
+              <span class="stat-desc">Material de alumnas del IPN (17–25 años)</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num">8</span>
+              <span class="stat-desc">Denunciantes iniciales formales</span>
+            </div>
+          </div>
+
+          <h4>Desenlace Institucional y Judicial</h4>
+          <ul class="clean-list">
+            <li><strong>Vía Administrativa:</strong> Baja definitiva dictaminada por el IPN en octubre de 2023 tras activar su protocolo de violencia de género.</li>
+            <li><strong>Vía Penal (Fisura Probatoria):</strong> Absuelto el 4 de diciembre de 2024 por el delito contra la intimidad sexual en dos denuncias por "insuficiencia probatoria" para acreditar autoría digital individual; posteriormente sentenciado a <strong>5 años de prisión</strong> (14 de mayo de 2025) por trata de personas (almacenamiento de pornografía infantil) en un proceso distinto.</li>
+          </ul>
+
+          <!-- CONTENEDOR DE EVIDENCIA VISUAL IPN -->
+          <div class="evidence-box">
+            <img src="evidencia-ipn.png" alt="Esquema documental o nota oficial Caso IPN" onerror="this.style.display='none'" />
+            <div class="evidence-caption">
+              [ Espacio para infografía / nota oficial del caso IPN: sube <strong>evidencia-ipn.png</strong> a tu repositorio para mostrarla aquí ]
+            </div>
+          </div>
         </div>
-        <div class="video-frame">
-          <h3 style="color: var(--magenta); margin-bottom: 0.5rem;">Evidencia Audiovisual · Caso Pemex</h3>
-          <!-- REEMPLAZA 'evidencia-pemex.mp4' CON EL NOMBRE DE TU VIDEO SUBIDO A GITHUB -->
-          <video controls poster="">
-            <source src="evidencia-pemex.mp4" type="video/mp4" />
-            Tu navegador no soporta la reproducción de video HTML5.
-          </video>
-          <p style="font-size: 0.8rem; margin-top: 0.6rem; font-family: var(--font-mono);">
-            * Sube tu archivo <strong>evidencia-pemex.mp4</strong> a la misma carpeta en GitHub para visualizarlo aquí.
-          </p>
+
+        <!-- CASO 2: PEMEX -->
+        <div class="card cyan-accent">
+          <h3>4.4. Caso 2: Videos Falsos de Inversión Relacionados con Pemex</h3>
+          <p>Entre 2023 y 2026 circularon campañas masivas en YouTube, Meta y TikTok empleando <strong>videos sintéticos continuos</strong> con sincronización labial (<em>lip-sync</em>) y clonación de voz de periodistas (Azucena Uresti), empresarios (Carlos Slim) y titulares del Ejecutivo Federal.</p>
+
+          <div class="stat-grid">
+            <div class="stat-box">
+              <span class="stat-num" style="color: var(--primary);">$4,500</span>
+              <span class="stat-desc">Depósito inicial fraudulento solicitado</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" style="color: var(--primary);">$300,000</span>
+              <span class="stat-desc">Rendimiento mensual falso prometido</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" style="color: var(--primary);">2023–2026</span>
+              <span class="stat-desc">Persistencia de campañas pautadas</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" style="color: var(--primary);">Multi-Red</span>
+              <span class="stat-desc">YouTube, Facebook, Instagram y TikTok</span>
+            </div>
+          </div>
+
+          <h4>Mecánica del Engaño y Respuesta Estatal</h4>
+          <ul class="clean-list">
+            <li><strong>Ingeniería Social Audiovisual:</strong> Uso de formatos noticiosos reales y logotipos oficiales para dirigir a los usuarios hacia formularios externos de captura de datos bancarios.</li>
+            <li><strong>Contención Institucional:</strong> Desmentidos en conferencias presidenciales (octubre 2023 y abril 2024), alertas de la SSPC (septiembre 2025) y comunicados permanentes de <strong>Pemex</strong> (hasta enero 2026) ante la dificultad de persecución penal transfronteriza.</li>
+          </ul>
+
+          <!-- CONTENEDOR DE VIDEO EVIDENCIA PEMEX -->
+          <div class="evidence-box">
+            <video controls>
+              <source src="evidencia-pemex.mp4" type="video/mp4" />
+              Tu navegador no soporta la reproducción de video.
+            </video>
+            <div class="evidence-caption">
+              [ Evidencia audiovisual Caso Pemex: sube tu clip <strong>evidencia-pemex.mp4</strong> a tu repositorio para reproducirlo en vivo ]
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- TABLA COMPARATIVA 4.6 Y 4.7 -->
+      <h3 style="margin-top: 1.5rem;">4.6 y 4.7. Matriz Comparativa e Interpretación de Casos</h3>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Categoría Analítica</th>
+            <th>Caso IPN (Violencia Digital)</th>
+            <th>Caso Pemex (Ciberdefraudación)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tipo de Contenido</strong></td>
+            <td>Principalmente fotografías manipuladas y compilaciones en dispositivos.</td>
+            <td>Videos falsos continuos con voz clonada y sincronización labial.</td>
+          </tr>
+          <tr>
+            <td><strong>Bien Jurídico Afectado</strong></td>
+            <td>Intimidad sexual, dignidad humana, propia imagen y desarrollo psicosocial.</td>
+            <td>Patrimonio económico ciudadano, identidad pública y confianza institucional.</td>
+          </tr>
+          <tr>
+            <td><strong>Mecanismo de Difusión</strong></td>
+            <td>Almacenamiento local y grupos privados cerrados (Telegram).</td>
+            <td>Publicidad pagada y difusión viral en plataformas abiertas masivas.</td>
+          </tr>
+          <tr>
+            <td><strong>Cuello de Botella Legal</strong></td>
+            <td>Acreditar la autoría individual en la creación del archivo sintético en juicio.</td>
+            <td>Atribución transfronteriza y remoción oportuna de anuncios pautados.</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
-    <!-- DIAPOSITIVA 6: CAPÍTULO 4 (INTERPRETACIÓN) -->
-    <section class="slide" data-chapter="4">
-      <div class="tag">Capítulo 4 · Hallazgos del Análisis Comparativo</div>
-      <h2>Asimetría entre Capacidad Técnica y Respuesta Estatal</h2>
+    <!-- ===================================================================== -->
+    <!-- CAPÍTULO 5: RESULTADOS, DISCUSIÓN Y PROPUESTA DE MITIGACIÓN           -->
+    <!-- ===================================================================== -->
+    <section class="chapter-view" id="chap-5">
+      <div class="chapter-header">
+        <div class="tag">Capítulo 5</div>
+        <h2>Análisis de resultados, discusión y propuesta de mitigación</h2>
+        <p>Síntesis de hallazgos empíricos, desafíos forenses y estrategia multidimensional de prevención en cuatro ámbitos.</p>
+      </div>
+
+      <h3>5.1 – 5.5. Principales Hallazgos y Discusión Multidimensional</h3>
       <div class="grid-3">
         <div class="card">
-          <h3>Escala Micro vs. Macro</h3>
-          <p>El caso IPN evidencia el ataque directo a la dignidad e intimidad individual; el caso Pemex demuestra la escalabilidad algorítmica para defraudar masivamente.</p>
-        </div>
-        <div class="card alert">
-          <h3>Fisura Probatoria</h3>
-          <p>En ambos escenarios, la existencia del contenido falso no garantiza por sí sola demostrar quién lo produjo ni su trazabilidad en plataformas encriptadas o comprimidas.</p>
+          <h3>Insuficiencia del Detector Aislado</h3>
+          <p>Los detectores automáticos (<em>Kaur et al., 2024; Verdoliva, 2020</em>) sufren degradación por compresión en redes sociales y generan falsos positivos/negativos. Deben operar como apoyo pericial junto con metadatos, funciones <strong>Hash</strong> y estándares <strong>C2PA</strong>.</p>
         </div>
         <div class="card">
-          <h3>Insuficiencia Reactiva</h3>
-          <p>Las alertas públicas y bajas administrativas contienen parcialmente el daño, pero resultan insuficientes frente a la velocidad de generación y viralización.</p>
+          <h3>Distinción entre Existencia y Autoría</h3>
+          <p>El caso IPN demuestra que probar la existencia de material alterado no equivale automáticamente a acreditar responsabilidad penal individual; el caso Pemex revela que el daño no solo es patrimonial, sino epistémico al minar la credibilidad oficial.</p>
+        </div>
+        <div class="card">
+          <h3>Convergencia Disciplinaria</h3>
+          <p>La solución exige articular ciencias computacionales, derecho procesal, ciberseguridad institucional y educación digital, evitando prohibiciones indiscriminadas que frenen usos legítimos de la IA en ciencia y educación.</p>
         </div>
       </div>
-    </section>
 
-    <!-- DIAPOSITIVA 7: CAPÍTULO 5 (PROPUESTA Y CONCLUSIONES) -->
-    <section class="slide" data-chapter="5">
-      <div class="tag">Capítulo 5 · Resultados, Propuesta de Mitigación y Conclusiones</div>
-      <h2>Modelo Integral de Prevención y Mitigación (4 Ejes)</h2>
+      <h3 style="margin-top: 1.5rem;">5.6. Propuesta Integral de Prevención y Mitigación (4 Ámbitos)</h3>
       <div class="grid-4">
-        <div class="card">
-          <h3>1. Eje Técnico</h3>
-          <p>Detectores multimodales (visual + temporal), autenticación multifactor (MFA) y estándares de procedencia <strong>C2PA</strong>.</p>
+        <div class="card cyan-accent">
+          <h3>1. Ámbito Técnico</h3>
+          <ul class="clean-list">
+            <li>Detectores multimodales (visual + temporal + biométrico).</li>
+            <li>Verificación por canales oficiales independientes.</li>
+            <li>Autenticación multifactor (MFA) resistente a phishing.</li>
+            <li>Credenciales de procedencia <strong>C2PA</strong> y preservación forense.</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>2. Eje Institucional</h3>
-          <p>Canales oficiales de verificación, respuesta rápida ante suplantación y protocolos de acompañamiento sin revictimización.</p>
+        <div class="card emerald-accent">
+          <h3>2. Ámbito Institucional</h3>
+          <ul class="clean-list">
+            <li>Canales oficiales de reporte y respuesta rápida.</li>
+            <li>Protocolos educativos que eviten revictimizar a las personas afectadas.</li>
+            <li>Prohibición de autorizar transferencias financieras mediante videos no verificados.</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>3. Eje Normativo</h3>
-          <p>Especialización en peritaje informático forense, cadena de custodia digital y gobernanza basada en riesgos (NIST AI RMF).</p>
+        <div class="card amber-accent">
+          <h3>3. Ámbito Normativo</h3>
+          <ul class="clean-list">
+            <li>Capacitación de peritos y operadores jurídicos en forensia digital.</li>
+            <li>Cooperación ágil con plataformas para retiro inmediato.</li>
+            <li>Gobernanza basada en riesgos (<strong>NIST CSF 2.0</strong> y <strong>NIST AI 600-1</strong>).</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>4. Alfabetización</h3>
-          <p>Educación digital ciudadana para verificar fuentes, desconfiar de rendimientos irreales y proteger la biometría facial.</p>
+        <div class="card crimson-accent">
+          <h3>4. Alfabetización Mediática</h3>
+          <ul class="clean-list">
+            <li>Reconocimiento crítico de contenido sintético.</li>
+            <li>Verificación de fuentes antes de compartir.</li>
+            <li>Prevención de fraudes financieros y protección de identidad biométrica.</li>
+          </ul>
         </div>
       </div>
-      <div class="card" style="margin-top: 1.3rem; border-color: var(--emerald);">
-        <h3 style="color: var(--emerald);">Conclusión Central</h3>
-        <p style="color: #fff;">
-          La detección computacional por sí sola no basta para erradicar el uso malicioso de los <em>deepfakes</em>. La defensa de la identidad y la verdad pública en México exige articular rigor algorítmico, trazabilidad criptográfica, actualización pericial y educación digital sin frenar las aplicaciones legítimas de la IA.
+
+      <div class="card emerald-accent" style="margin-top: 1.5rem; background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);">
+        <h3>5.7 y 5.8. Conclusiones Generales y Trabajos Futuros</h3>
+        <p style="color: var(--text-dark); margin-bottom: 0.8rem;">
+          Los <em>deepfakes</em> representan una amenaza sociotécnica compleja donde la sofisticación algorítmica amplifica riesgos sobre la intimidad, el patrimonio y la confianza democrática en México. La respuesta efectiva no puede ser meramente reactiva ni exclusivamente computacional: requiere integrar mecanismos preventivos de autenticidad audiovisual, fortalecimiento pericial y alfabetización digital ciudadana.
+        </p>
+        <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--emerald);">
+          <strong>Líneas Futuras:</strong> Evaluación experimental controlada de detectores en conjuntos mexicanos verificados, estudios de percepción humana, implementación de firmas criptográficas de captura y análisis jurídico sobre reparación integral del daño digital.
         </p>
       </div>
     </section>
@@ -714,65 +1032,66 @@
   </main>
 
   <footer class="controls">
-    <div class="slide-counter" id="slideCounter">Diapositiva 1 / 8</div>
+    <div class="section-indicator" id="sectionIndicator">Sección 1 de 6 · Portada</div>
     <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
-      Usa las flechas ◄ ► del teclado para navegar
+      Desplázate verticalmente para leer cada capítulo · Usa ◄ ► para cambiar de sección
     </div>
     <div class="nav-arrows">
-      <button onclick="prevSlide()">◄ Anterior</button>
-      <button onclick="nextSlide()">Siguiente ►</button>
+      <button onclick="prevChapter()">◄ Anterior</button>
+      <button onclick="nextChapter()">Siguiente ►</button>
     </div>
   </footer>
 
   <script>
-    const slides = document.querySelectorAll('.slide');
-    const chapButtons = document.querySelectorAll('.chap-btn');
+    const chapters = document.querySelectorAll('.chapter-view');
+    const navButtons = document.querySelectorAll('.chap-btn');
     const progressBar = document.getElementById('progressBar');
-    const slideCounter = document.getElementById('slideCounter');
-    let currentSlide = 0;
+    const sectionIndicator = document.getElementById('sectionIndicator');
+    const titles = [
+      'Portada e Introducción',
+      'Capítulo 1 · Fundamentos Teóricos',
+      'Capítulo 2 · Arquitecturas Computacionales',
+      'Capítulo 3 · Dimensiones Jurídicas en México',
+      'Capítulo 4 · Estudio Comparativo (IPN y Pemex)',
+      'Capítulo 5 · Resultados y Propuesta'
+    ];
+    let currentIndex = 0;
 
-    function updateDeck() {
-      slides.forEach((slide, idx) => {
-        slide.classList.toggle('active', idx === currentSlide);
+    function showChapter(index) {
+      if (index < 0 || index >= chapters.length) return;
+      currentIndex = index;
+
+      chapters.forEach((chap, i) => {
+        chap.classList.toggle('active', i === currentIndex);
       });
 
-      const activeChapter = slides[currentSlide].getAttribute('data-chapter');
-      chapButtons.forEach((btn, idx) => {
-        btn.classList.toggle('active', idx === parseInt(activeChapter));
+      navButtons.forEach((btn, i) => {
+        btn.classList.toggle('active', i === currentIndex);
       });
 
-      const progress = ((currentSlide + 1) / slides.length) * 100;
+      const progress = ((currentIndex + 1) / chapters.length) * 100;
       progressBar.style.width = `${progress}%`;
-      slideCounter.textContent = `Diapositiva ${currentSlide + 1} / ${slides.length}`;
+      sectionIndicator.textContent = `Sección ${currentIndex + 1} de ${chapters.length} · ${titles[currentIndex]}`;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function nextSlide() {
-      if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        updateDeck();
+    function nextChapter() {
+      if (currentIndex < chapters.length - 1) {
+        showChapter(currentIndex + 1);
       }
     }
 
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateDeck();
-      }
-    }
-
-    function goToSlide(index) {
-      if (index >= 0 && index < slides.length) {
-        currentSlide = index;
-        updateDeck();
+    function prevChapter() {
+      if (currentIndex > 0) {
+        showChapter(currentIndex - 1);
       }
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
-      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextChapter();
+      if (e.key === 'ArrowLeft') prevChapter();
     });
-
-    updateDeck();
   </script>
 </body>
 </html>
